@@ -1,0 +1,26 @@
+<table>
+  <thead>
+    <th>Name</th>
+    <% @courses.each do |c| %>
+      <th>
+        <%= c.name %>
+      </th>
+    <% end %>
+  </thead>
+
+  <tbody>
+    <% @students.each do |s| %>
+      <tr>
+        <td><%= "#{s.first_name.try(:first)} #{s.last_name}" %></td>
+        <% @courses.each do |c| %>
+          <td>
+            <% if grade = @grades[s.id] && @grades[s.id][c.id].try(:first) %>
+              <%= grade.str_value %>
+            </td>
+          <% end %>
+        </td>
+      <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

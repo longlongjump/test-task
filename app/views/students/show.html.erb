@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<div>
+  <%= @student.first_name %>
+</div>
+<div>
+  <%= @student.last_name %>
+</div>
+<div>
+  <% if @available_courses.present? %>
+    <%= form_tag assign_course_student_path(@student), method: :post do |f|%>
+      Assign Course:
+      <%= select_tag :course_id, options_from_collection_for_select(@available_courses, "id", "name") %>
+      <%= submit_tag 'Assign' %>
+    <% end %>
+  <% end %>
+</div>
+
+<h3>Assigned casting</h3>
+<table>
+  <tbody>
+    <% @student.courses.each do |course| %>
+      <tr>
+        <td><%= course.name %></td>
+        <td>
+          <% if grade = @grades[course.id].try(:first) %>
+            <%= grade.str_value %>
+          <% else %>
+            <%= form_tag assign_grade_student_path(@student), method: :post do %>
+              <%= hidden_field_tag :course_id, course.id %>
+              <%= select_tag :value,
+                  options_for_select(Grade::VALUES.map.with_index {|v, index| [v,index]}) %>
+              <%= submit_tag 'Assign' %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+<%= link_to 'Edit', edit_student_path(@student) %> |
+<%= link_to 'Back', students_path %>
